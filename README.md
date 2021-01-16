@@ -4,6 +4,10 @@ This repository shows how to build a Seatalk Autopilot Remote Control device bas
 
 My special thanks to users of www.segeln-forum.de for testing.
 
+With the 433 MHz sender you can send -1 / +1 degree and -10 / +10 degrees. With a 6 key KeyFob or an additional one you can also send Auto/Standby commands.
+
+Since version 1.5 the AP remote control reacts also on commands received via USB-Serial interface. Supported commands: "-1", "+1", "-10", "+10", "A" and "S". Both Newline and or CR are accepted at end of command from serial. This interfcae shall allow external applications like AvNav to control the AP functions.
+
 ![Autopilot Remote](https://github.com/AK-Homberger/Seatalk-Autopilot-Remote-Control/blob/master/IMG_0857.JPG)
 
 ![Autopilot Schematic](https://github.com/AK-Homberger/Seatalk-Autopilot-Remote-Control/blob/master/Remote%20Pilot%20Schematics.png)
@@ -34,6 +38,11 @@ Since version 1.1 it supports now also Auto and Standby remote control. You have
 # Caution: Lighthouse III does not react on Seatalk Alarm 
 MFDs with Lighthose II will react on the Seatalk alarm function with a short beep. Unfortunately, Lighthouse III is ignoring this alarm. If you prefer to use Lighthouse III then please connect an additonal buzzer to pin 20 of the ProMicro.
 
+# Problem with some 74LS07 variants
+It seems that there are different types of 74LS07 devices available with slightly different electrical charcteristics. See issue "R3 wrong value?" for details.
+If you get a "Send Error" problem (with 12 Volt connected) then the solution is to lower the value of R3. It is important to check two voltages. With Satalk signal line high (12 Volt) the voltage on pin 3 of 74LS07 (or alternatively on cathode of D1, which is easier to measure) should be above 2 Volt. When Seatalk pulled to GND (low) the voltage on pin 3 should be less than 0.8 Volt.
+
+
 # Software
 The Seatalk communication is a 9 bit serial protocol. This is not directly supported from Arduino. But I found a working 9 bit hardware serial implementation. For convenience, I have added the working source code here, because there are different versions available (in github and elsewhere).
 
@@ -62,7 +71,7 @@ Send each code individually and programm the keys of the remote according to the
 
 Key 1 = button A = -1 degree
 
-Key 2 = button B =  +0 degree
+Key 2 = button B =  +1 degree
 
 Key 3 = button C = -10 degrees
 
@@ -74,14 +83,14 @@ Have fun with the remote control.
 
 Please be aware that this repository is only for educational purpose, to learn how to use the Seatalk protocol. Use it on your own risk and do not use it for critical systems in real life environments.
 
-# Partlist:
+# Parts:
 
 - J1  Connector, AKL 101-03, 3-pin, 5,08 mm [Link](https://www.reichelt.com/index.html?ACTION=446&LA=0&nbc=1&q=akl%20101-03)
 - J2  RXB6 433 Mhz receiver [Link](https://www.makershop.de/en/module/funk/rxb6-433mhz-antenne/)
-- J4  Arduino ProMicro, 5 Volt [Link](https://www.makershop.de/en/plattformen/arduino/pro-micro-mini-usb/) 
+- J4  Arduino ProMicro, 5 Volt [Link](https://eckstein-shop.de/HIMALAYA-basic-Pro-micro-5V-16MHz-Arduino-mini-Leonardo-compatible-board)  oder [Link](https://www.amazon.de/Micro-ATmega32U4-Arduino-Leonardo-%C3%A4hnlich/dp/B01D0OI90U)
 - U1  7805  (alternative: 173950578 MagI3C DC-DC Power Module) [Link](https://www.reichelt.com/de/en/voltage-regulator-up-to-1-5-a-positive-to-220--a-7805-p23443.html?&trstct=pos_0&nbc=1) or [Link2](https://www.digikey.de/product-detail/en/w-rth-elektronik/173950578/732-8243-5-ND/5725367?cur=EUR&lang=en)
 - U2  7407N (alternative: 74LS07) [Link](https://www.reichelt.com/de/en/index.html?ACTION=446&LA=446&nbc=1&q=7407n) or [Link](https://csd-electronics.de/ICs/Logik/74LS/74LS07-DIP14::283.html?pk_campaign=google_shopping&pk_kwd=74LS07-DIP14&gclid=EAIaIQobChMIrLSWjb-O7AIVird3Ch0ClQEdEAQYBCABEgJCdPD_BwE)
-- D1  Zenerdiode 5,1 Volt (0,5 Watt) [Link](https://www.reichelt.com/de/en/zener-diode-0-5-w-5-1-v-zf-5-1-p23137.html?&trstct=pos_0&nbc=1)
+- D1  Zenerdiode 5.1 Volt (0.5 Watt) [Link](https://www.reichelt.com/de/en/zener-diode-0-5-w-5-1-v-zf-5-1-p23137.html?&trstct=pos_0&nbc=1)
 - D2  LED, rot, 3 mm [Link](https://www.reichelt.com/de/en/led-3-mm-low-current-red-led-3mm-2ma-rt-p21626.html?&trstct=pos_8&nbc=1)
 - R1,R5 Resistor 10 KOhm, 1/4 watt [Link](https://www.reichelt.com/de/en/carbon-film-resistor-1-4w-5-10-kilo-ohms-1-4w-10k-p1338.html?&nbc=1)
 - R2  Resistor 68 KOhm, 1/4 watt [Link](https://www.reichelt.com/de/en/carbon-film-resistor-1-4-w-5-68-kohm-1-4w-68k-p1462.html?&nbc=1)
@@ -101,8 +110,11 @@ Remote Control (KeyFob):  [Link](https://www.amazon.de/XCSOURCE-Elektrische-Univ
 
 # Updates:
 
+- Version 1.5 - 16.12.20: Added command receive from USB-Serial to allow control from AvNav.
+- Version 1.4 - 28.11.20: Changed R2 and R3 back to 68 KOhm / 27 kOhm. 6.8 KOhm would impact the Seatalk high voltage level too much.
+- Version 1.4 - 27.11.20: Changed R2 and R3 to 6.8 KOhm to eliminate problems with some 74LS07 devices (see issue "R3 wrong value?" for details).
 - Version 1.4 - 27.07.20: Use of millis() funtion to avoid delay() and timer counter in loop(). Improved detection of 433MHz keys.
 - Version 1.3 - 13.12.19: Added definition for certain OLED displays that require this to work properly.
-- Version 1.2 - 21.09.19: Added buzzer support on pin 20 (active 5 Volt buzzer works without additional transitor).
+- Version 1.2 - 21.09.19: Added buzzer support on pin 20 (active 5 Volt buzzer works without additional transistor).
 - Version 1.1 - 03.08.19: Added support for Auto and Standby (Key 5 and 6).
 - Added new programming code (_433_Programming_New.ino) to simplify programming of KeyFob without recompiling and upload for each key.
