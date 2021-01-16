@@ -1,5 +1,13 @@
 # Seatalk Autopilot Remote Control
 
+To Do: See if the following can be implemented:
+- [ ] See if we can implement simultaneous button presses. If so:
+  - [ ] Enable tacking by pressing +1 and +10 or -1 and -10.
+     X1  21  DE     -1 & -10 (port tack, doesn´t work on ST600R?)
+     X1  22  DD     +1 & +10 (stb tack)
+  - [ ] Enable Auto/Standby mode by pressing +1/-1 or +10/-10. Code already exists for the mythical 6 button remote.
+  - [ ] Enable other commands for diagonal combinations or long presses. Posibilities supported by sea talk incude Wind mode, track, display change, 
+
 This repository shows how to build a Seatalk Autopilot Remote Control device based on an Arduino Pro Micro and a simple 433 MHz KeyFob. It has been tested successfully with different Raymarine autopilots.
 
 My special thanks to users of www.segeln-forum.de for testing.
